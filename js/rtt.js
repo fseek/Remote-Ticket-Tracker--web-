@@ -14,7 +14,7 @@ $(function()
 	function login(username, password)
 	{
 		//test stuff
-		$('#msg').append(
+		$('#msg').html(
 			'<a> Login successful with ' + username + ':' + password + '.'
 		);
 	}
