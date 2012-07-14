@@ -29,10 +29,14 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
 	{
 		global $dbsettings;
 		$ids = $this->doQuery("SELECT `ticket_id` FROM `character_ticket`;", $dbsettings["world_db"]);
+		$idsImpl = array();
+		$count = 0;
 		while($id = mysql_fetch_array($ids))
 		{
-			echo $id[0]."<br>";
+			$idsImpl[$count] = $id[0];
+			$count = $count+1;
 		}
+		echo json_encode($idsImpl);
 	}
 
 	function checkLogin($username, $password) //$password = SHA1(CONCAT(UPPER(`username`), ':', UPPER(<pass>)));
