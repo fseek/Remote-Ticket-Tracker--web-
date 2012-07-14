@@ -4,8 +4,8 @@
 		<meta charset="UTF-8" />
 		<title>Remote Ticket Tracker - Login</title>
 		<style type="text/css" media="screen">@import "css/jQThemes/css/apple.css";</style>
-		<script src="js/jQJS/lib/zepto.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/jQJS/jqtouch.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jQJS/lib/zepto.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jQJS/jqtouch.js" type="text/javascript" charset="utf-8"></script>
 		<!-- Uncomment the following two lines (and comment out the previous two) to use jQuery instead of Zepto. -->
 		<!-- <script src="js/jQJS/lib/jquery-1.7.min.js" type="application/x-javascript" charset="utf-8"></script> -->
 		<!-- <script src="js/jQJS/jqtouch-jquery.min.js" type="application/x-javascript" charset="utf-8"></script> -->
@@ -15,6 +15,7 @@
 		Remote Ticket Tracker
 		All custom code is embedded below:
 		-->
+		<script src="js/sha1.js" type="application/x-javascript" charset="utf-8"></script>
 		<script src="js/rtt.js" type="application/x-javascript" charset="utf-8"></script>
 		<link rel="stylesheet" href="css/rtt.css" type="text/css" media="screen" charset="utf-8" />
 	</head>
@@ -46,7 +47,7 @@
 			<div id="info">
 				<div class="toolbar">
 					<h1>About</h1>
-						<a href="#add" class="cancel">Cancel</a>
+					<a href="#add" class="cancel">Cancel</a>
 				</div>
 				<!-- About Screen _content -->
 				<div class="info">
@@ -54,6 +55,18 @@
 				</div>
 			</div>
 			<!-- About Screen END -->
+			
+			<!-- Ticket List Screen -->
+			<div id="ticket">
+				<div class="toolbar">
+					<h1>Ticket</h1>
+					<a href='#' id="logoutButton" class="cancel">Logout</a>
+				</div>
+				<div id="ticketList">
+					<img style="margin:0px auto;display:block" src="img/ajax-loader.gif" alt="Angry face" />
+				</div>
+			</div>
+			<!-- Ticket List Screen -->
 		</div>
 	</body>
 </html>

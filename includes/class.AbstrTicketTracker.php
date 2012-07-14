@@ -21,14 +21,27 @@ abstract class RemoteTicketTracker
 	
 	public function login($loginResp = false)
 	{
-		if(isset($_POST["username"]) && isset($_POST["password"]))
+		$dataSet = isset($_POST["username"]) && isset($_POST["password"]);
+		if($dataSet == true && $loginResp == true)
 		{
 			$username = mysql_escape_string($_POST["username"]);
 			$password = mysql_escape_string($_POST["password"]);
 			$this->checkLogin($username, $password);
+			session_start();
+			$_SESSION['username'] = $username;
+			$_SESSION['password'] = $password;
 			if($loginResp == true)
 			{
 				echo "true";
+			}
+		}
+		else if($loginResp == false)
+		{
+			$username = $_SESSION['username'];
+			$password = $_SESSION['password'];
+			if(isset($username) && isset($password))
+			{
+				$this->checkLogin($username, $password);
 			}
 		}
 		else
@@ -36,6 +49,17 @@ abstract class RemoteTicketTracker
 			echo "false<br>No data entered";
 			die;
 		}
+	}
+	
+	public function logout()
+	{
+		$_SESSION = array();
+		if (ini_get("session.use_cookies")) 
+		{
+			$params = session_get_cookie_params();
+			setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+		}
+		session_destroy();
 	}
 	
 	protected function doquery($query, $database, $fetch = false)

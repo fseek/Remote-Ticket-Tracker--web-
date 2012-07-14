@@ -39,7 +39,7 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
 	{
 		global $dbsettings;
 		$data = $this->doQuery("SELECT `gmlevel` FROM `account` WHERE `username` = '" . $username . "' AND sha_pass_hash = '" . $password . "'", $dbsettings["acc_db"]);
-		if(!$data)
+		if(!$data || mysql_num_rows($data) == 0)
 		{
 			echo "false<br>Data wrong!";
 			die;
@@ -48,7 +48,7 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
 		$gm_level = $fetch_gm_info['gmlevel'];
 		if($gm_level == 0 || $gm_level == 1)
 		{
-			echo "false<br>Premission denied !";
+			echo "false<br>Permission denied !";
 			die;
 		}
 	}

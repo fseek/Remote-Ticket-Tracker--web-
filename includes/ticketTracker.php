@@ -13,9 +13,13 @@ if(empty($command))
 	$command = 0;
 }
 if($command == 0)
+{
 	$tracker->login(true);
+}
 else
+{
 	$tracker->login();
+}
 switch($command)
 {
 	case 0:
@@ -54,5 +58,9 @@ switch($command)
 			$mail_body = mysql_escape_string($_POST["body"]);
 			$tracker->sendMail($char_id, $gmName, $subject, $ticket_id, $mail_body);
 		}
+		break;
+	case 6:
+		$tracker->logout();
+		break;
 }
 ?>
