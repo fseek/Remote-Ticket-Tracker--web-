@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+	   <head>
+	        <meta charset="UTF-8" />
+			<title>Remote Ticket Tracker - Login</title>
+			<style type="text/css" media="screen">@import "css/jQThemes/css/apple.css";</style>
+			<script src="js/jQJS/lib/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="js/jQJS/jqtouch.min.js" type="text/javascript" charset="utf-8"></script>
+			<!-- Uncomment the following two lines (and comment out the previous two) to use jQuery instead of Zepto. -->
+			<!-- <script src="js/jQJS/lib/jquery-1.7.min.js" type="application/x-javascript" charset="utf-8"></script> -->
+			<!-- <script src="js/jQJS/jqtouch-jquery.min.js" type="application/x-javascript" charset="utf-8"></script> -->
+			<script src="js/jQJS/extensions/jqt.themeswitcher.min.js" type="application/x-javascript" charset="utf-8"></script>
+			
+			<!-- 
+            Remote Ticket Tracker
+            All custom code is embedded below:
+			-->
+			<script src="js/rtt.js" type="application/x-javascript" charset="utf-8"></script>
+			<link rel="stylesheet" href="css/rtt.css" type="text/css" media="screen" charset="utf-8" />
+    </head>
+	<body>
+		<div id="jqt">
+			<!-- Home Screen -->
+			<div id="home">
+				<div class="toolbar">
+					<h1>RTT</h1>
+					<a href="#info" class="button leftButton flip">Info</a>
+				</div>
+				<!-- Home Screen _content -->
+				<div>
+					<form id="loginForm">
+						<ul class="rounded">
+							<li><input type="text" name="username" placeholder="Username" id="username" /></li>
+							<li><input type="password" name="password" placeholder="Password" id="password" /></li>
+						</ul>
+						<a style="margin-top: 10px; margin-bottom: 10px; color:rgba(0,0,0,.9)" href="#" class="submit whiteButton">Login</a>
+					</form>
+					<div id="msg">
+					</div>
+				</div>
+				<!--- Home Screen _content END -->
+            </div>
+			<!-- Home Screen END -->
+			
+			<!-- About Screen -->
+			<div id="info">
+                <div class="toolbar">
+                    <h1>About</h1>
+                    <a href="#add" class="cancel">Cancel</a>
+                </div>
+				<!-- About Screen _content -->
+                <div class="info">
+                    Made by Thedeath
+                </div>
+				<!-- About Screen _content END -->
+            </div>
+			<!-- About Screen END -->
+		</div>
+	</body>
+</html>
