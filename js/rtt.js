@@ -2,11 +2,7 @@ var jQT = new $.jQTouch(
 {
 	icon: '../img/jqtouch.png',
 	icon4: '../img/jqtouch4.png',
-	addGlossToIcon: false,
 	startupScreen: '../img/jqt_startup.png',
-	statusBar: 'black-translucent',
-	themeSelectionSelector: '#jqt #themes ul',
-	preloadImages: []
 });
 
 $(function()
