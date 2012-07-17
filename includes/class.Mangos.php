@@ -36,7 +36,8 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
             $idsImpl[$count] = $id[0];
             $count = $count+1;
         }
-        echo json_encode($idsImpl);
+        $jsonObj = array('ids' => $idsImpl);
+        echo json_encode($jsonObj);
     }
 
     function checkLogin($username, $password) //$password = SHA1(CONCAT(UPPER(`username`), ':', UPPER(<pass>)));

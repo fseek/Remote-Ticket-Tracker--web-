@@ -4,17 +4,23 @@
         <meta charset="UTF-8" />
         <title>Remote Ticket Tracker - Login</title>
         <style type="text/css" media="screen">@import "jQJS/themes/css/apple.css";</style>
-        <script src="jQJS/lib/zepto.js" type="text/javascript" charset="utf-8"></script>
+        <!-- Uncomment the following line(and comment out the jquery one) to use Zepto instead of jQuery (some functions may not work anymore !). -->
+        <!-- <script src="jQJS/lib/zepto.js" type="text/javascript" charset="utf-8"></script> -->
         <script src="jQJS/jqtouch.js" type="text/javascript" charset="utf-8"></script>
-        <!-- Uncomment the following two lines (and comment out the previous two) to use jQuery instead of Zepto. -->
-        <!-- <script src="js/jQJS/lib/jquery-1.7.min.js" type="application/x-javascript" charset="utf-8"></script> -->
-        <!-- <script src="js/jQJS/jqtouch-jquery.min.js" type="application/x-javascript" charset="utf-8"></script> -->
+        
+        <script src="jQJS/lib/jquery-1.7.js" type="application/x-javascript" charset="utf-8"></script>
+        <script src="jQJS/jqtouch-jquery.js" type="application/x-javascript" charset="utf-8"></script>
+        
+        <!-- <script src="js/zeptoJQueryFix.js" type="text/javascript" charset="utf-8"></script> -->
+        <script src="js/blockUI.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/sha1.js" type="application/x-javascript" charset="utf-8"></script>
+        <script src="js/jquery.cookie.js"></script>
         <!-- 
         Remote Ticket Tracker
         All custom code is embedded below:
         -->
-        <script src="js/sha1.js" type="application/x-javascript" charset="utf-8"></script>
         <script src="js/rtt.js" type="application/x-javascript" charset="utf-8"></script>
+        
         <link rel="stylesheet" href="css/rtt.css" type="text/css" media="screen" charset="utf-8" />
     </head>
     <body>
@@ -61,10 +67,10 @@
                     <a href='#' id="logoutButton" class="cancel">Logout</a>
                 </div>
                 <div id="ticketList">
-                    <img style="margin:0px auto;display:block" src="img/ajax-loader.gif" alt="Angry face" />
+                    <img id="ticketLoader" style="margin:0px auto;display:block" src="img/ajax-loader.gif" />
                 </div>
             </div>
-            <!-- Ticket List Screen -->
+            <!-- Ticket List Screen END -->
         </div>
     </body>
 </html>

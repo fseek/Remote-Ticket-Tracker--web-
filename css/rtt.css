@@ -24,3 +24,47 @@ div#jqt #about a
     font-weight: bold;
     text-decoration: none;
 }
+
+#ticketList > div {
+    background: -webkit-gradient(linear,0% 0%,0% 100%,from(#dadadc),to(#b4b3b8));
+    border-bottom: 1px solid #9a9fa5;
+    border-top: 1px solid #dbdbdd;
+    text-shadow: rgba(255,255,255,.5) 0 1px 0;
+    position: relative;
+    height: 50px;
+
+}
+
+.ticketId{
+    float:left;
+    width: 100px;
+    overflow: hidden;
+    margin: 0px auto;
+}
+
+.ticketCharacterName{
+    display: block;
+    width: 120px;
+    overflow: hidden;
+    margin: 0px auto;
+}
+
+.ticketCharacterState{
+    display: block;
+    width: 100px;
+    margin: 0px auto;
+    overflow: hidden:
+}
+
+.ticketText{
+    width: 200px;
+    overflow: hidden;
+    display: block;
+    margin: 0px auto;
+}
+
+.ticketDelete{
+    width: 100px;
+    background: url(img/delete.png);
+    margin: 0px auto;
+}

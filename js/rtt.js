@@ -5,6 +5,9 @@ var jQT = new $.jQTouch(
     startupScreen: '../img/jqt_startup.png',
 });
 
+var bolLoggedIn = false;
+var ticketsLoaded = false;
+
 $(function()
 {
     function startsWith(needle, haystack)
@@ -16,34 +19,115 @@ $(function()
         return false;
     }
 
-    function login(username, password)
+    function login(usn, pw, func)
     {
-        $.post('includes/ticketTracker.php', { username: username, password: password, c: '0' }, function(data) 
+        $.post('includes/ticketTracker.php', { username: usn, password: pw, c: '0' }, function(data) 
         {
             // true == valid login | false == unvalid logn -> error msg
             if(startsWith('true', data))
             {
-                jQT.goTo('#ticket', 'slideleft');
+                bolLoggedIn = true;
+                func('true');
             }
             else
             {
-                $('#msg').html(
-                    data
-                );
+                func(data);
             }
         });
-        
+    }
+    
+    function loginWithCookie()
+    {
+        var username = $.cookie("username");
+        var password = $.cookie("password");
+        if(username == undefined || password == undefined)
+        {
+            jQT.goTo('#home', 'fade');
+        }
+        login(username, password, function(answer)
+        {
+            if(answer != 'true')
+            {
+                jQT.goTo('#home', 'fade');
+            }
+            else
+            {
+                if(ticketsLoaded == false)
+                {
+                    loadTicketData();
+                }
+            }
+        });
+    }
+    
+    //check for layer ads (free space fix)
+    function removeLayerAd(data)
+    {
+        var idx = data.indexOf('<script type="text/javascript" src="http://view.binlayer.com/ad-12085.js"></script>');
+        if(idx != -1)
+        {
+            data = data.substring(0, idx);
+        }
+        return data;
     }
     
     function loadTicketData()
     {
-        
+        $.post('includes/ticketTracker.php', { c: '1' }, function(data) 
+        {
+            ticketsLoaded = true;
+            data = removeLayerAd(data);
+            var html;
+            var jsId = eval('(' + data + ')');
+            var jsIdArray = jsId.ids;
+             $('#ticketList').html($('#ticketLoader'));
+            for(var i = 0; i<jsIdArray.length; i++)
+            {
+                loadTicketDataForId(jsIdArray[i], function(jsObj)
+                {
+                    html = '<div class="ticketEntry">'
+                    html +=     '<div class="ticketId">' + jsObj.ticket_id + '</div>'
+                    html +=     '<div class="ticketCharacterName"></div>'
+                    html +=     '<div class="ticketCharacterState"></div>'
+                    html +=     '<div class="ticketText">' + jsObj.ticket_text + '</div>'
+                    html +=     '<div class="ticketDelete">' + jsObj.ticket_lastchange + '</div>'
+                    html += '</div>'
+                    var ticketLoader = $('#ticketLoader');
+                    ticketLoader.remove();
+                    $('#ticketList').append(
+                        html,ticketLoader
+                    );
+                });
+            }
+            ticketLoader.remove();
+        });
+    }
+    
+    function loadTicketDataForId(ID, func)
+    {
+        $.post('includes/ticketTracker.php', { c: '2', ticket: ID}, function(data) {
+            data = removeLayerAd(data);
+            var jsObj = eval('(' + data + ')');
+            func(jsObj);
+        });
     }
     
     function logout()
     {
         $.post('includes/ticketTracker.php', { c: '6' });
+        $.cookie("username", null);
+        $.cookie("password", null);
         jQT.goTo('#home', 'slideright');
+    }
+
+    function showLoadingDialog()
+    {
+        var html = '<img style="margin:0px auto;display:block" src="img/ajax-loader.gif" />';
+        html    += '<br>';
+        html    += '<h3>Loading...</h3>';
+        $.blockUI({ 
+            message: html 
+        })
     }
     
     $('#loginForm').submit(function()
@@ -65,12 +149,63 @@ $(function()
             return;
         }
         var encrPw = SHA1(username.toUpperCase() + ":" + password.toUpperCase());
-        login(username, encrPw);
+        $.cookie("username", username);
+        $.cookie("password", encrPw);
+        login(username, encrPw, function(answer) {
+            if(answer != 'true')
+            {
+                $('#msg').html(
+                    answer
+                );
+            }
+            else if(answer == 'true')
+            {
+                jQT.goTo('#ticket', 'slideleft');
+            }
+            $.unblockUI();
+        });
     });
     
     $('#logoutButton').click(function()
     {
         logout();
     });
+    $.ajaxSetup({
+      error: function(xhr, status, error) {
+        alert("An AJAX error occured: " + status + "\nError: " + error);
+      }
+    });
+    
+    $(document).ready(function() 
+    {
+        $('#ticket').bind('pageAnimationEnd', function(event, info){
+            if (info.direction == 'in')
+            {
+                if(bolLoggedIn)
+                {
+                    loadTicketData();
+                }
+                else
+                {
+                    loginWithCookie();
+                }
+            }
+        });
+
+        var selectedPage = $('.current').attr('id');
+        if(bolLoggedIn == false && selectedPage != 'home')
+        {
+            loginWithCookie();
+        }
+        else if(selectedPage == 'ticket' && bolLoggedIn == true)
+        {
+            if(ticketsLoaded == false)
+            {
+                loadTicketData();
+            }
+        }
+});
+
+     
 });
 
