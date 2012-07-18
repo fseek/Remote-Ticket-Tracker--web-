@@ -61,6 +61,7 @@ div#jqt #about a
     overflow: hidden;
     display: block;
     margin: 0px auto;
+    text-overflow: ellipsis;
 }
 
 .ticketDelete{
