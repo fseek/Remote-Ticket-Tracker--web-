@@ -80,10 +80,11 @@ $(function()
             var html;
             var jsId = eval('(' + data + ')');
             var jsIdArray = jsId.ids;
-             $('#ticketList').html($('#ticketLoader'));
+            $('#ticketList').html($('#ticketLoader'));
+            var ticketLoader = $('#ticketLoader');
             for(var i = 0; i<jsIdArray.length; i++)
             {
-                loadTicketDataForId(jsIdArray[i], function(jsObj)
+                loadTicketDataForId(jsIdArray[i], function(jsObj, index)
                 {
                     html = '<div class="ticketEntry">'
                     html +=     '<div class="ticketId">' + jsObj.ticket_id + '</div>'
@@ -92,23 +93,25 @@ $(function()
                     html +=     '<div class="ticketText">' + jsObj.ticket_text + '</div>'
                     html +=     '<div class="ticketDelete">' + jsObj.ticket_lastchange + '</div>'
                     html += '</div>'
-                    var ticketLoader = $('#ticketLoader');
                     ticketLoader.remove();
                     $('#ticketList').append(
                         html,ticketLoader
                     );
-                });
+                    if(index == jsIdArray.length-1)
+                    {
+                        ticketLoader.remove();
+                    }
+                }, i);
             }
-            ticketLoader.remove();
         });
     }
     
-    function loadTicketDataForId(ID, func)
+    function loadTicketDataForId(ID, func, index)
     {
         $.post('includes/ticketTracker.php', { c: '2', ticket: ID}, function(data) {
             data = removeLayerAd(data);
             var jsObj = eval('(' + data + ')');
-            func(jsObj);
+            func(jsObj, index);
         });
     }
     
