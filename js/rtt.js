@@ -1,15 +1,14 @@
-var jQT = new $.jQTouch(
-{
-    icon: '../img/jqtouch.png',
-    icon4: '../img/jqtouch4.png',
-    startupScreen: '../img/jqt_startup.png',
-});
+(function() {
+    var jQT = new $.jQTouch(
+    {
+        icon: '../img/jqtouch.png',
+        icon4: '../img/jqtouch4.png',
+        startupScreen: '../img/jqt_startup.png',
+    });
 
-var bolLoggedIn = false;
-var ticketsLoaded = false;
+    var bolLoggedIn = false;
+    var ticketsLoaded = false;
 
-$(function()
-{
     function startsWith(needle, haystack)
     {
         if(haystack.substr(0, needle.length) == needle)
@@ -132,67 +131,61 @@ $(function()
             message: html 
         })
     }
-    
-    $('#loginForm').submit(function()
-    {
-        var username = $('#username').val();
-        var password = $('#password').val();
-        if(username == '')
+
+    $(function()
+    {   
+        $('#loginForm').submit(function()
         {
-            $('#msg').html(
-                'Username field is empty !'
-            );
-            return;
-        }
-        if(password == '')
-        {
-            $('#msg').html(
-                'Password field is empty !'
-            );
-            return;
-        }
-        var encrPw = SHA1(username.toUpperCase() + ":" + password.toUpperCase());
-        $.cookie("username", username);
-        $.cookie("password", encrPw);
-        login(username, encrPw, function(answer) {
-            if(answer != 'true')
+            var username = $('#username').val();
+            var password = $('#password').val();
+            if(username == '')
             {
-                $('#msg').html(
-                    answer
-                );
+                $('#msg').html('Username field is empty !');
+                return;
             }
-            else if(answer == 'true')
+            if(password == '')
             {
-                jQT.goTo('#ticket', 'slideleft');
+                $('#msg').html('Password field is empty !');
+                return;
             }
-            $.unblockUI();
+            var encrPw = SHA1(username.toUpperCase() + ":" + password.toUpperCase());
+            $.cookie("username", username);
+            $.cookie("password", encrPw);
+            login(username, encrPw, function(answer) {
+                if(answer != 'true')
+                {
+                    $('#msg').html(answer);
+                }
+                else if(answer == 'true')
+                {
+                    jQT.goTo('#ticket', 'slideleft');
+                }
+                $.unblockUI();
+            });
         });
-    });
     
-    $('#logoutButton').click(function()
-    {
-        logout();
-    });
-    $.ajaxSetup({
-      error: function(xhr, status, error) {
-        alert("An AJAX error occured: " + status + "\nError: " + error);
-      }
-    });
-    
-    $(document).ready(function() 
-    {
-        $('#ticket').bind('pageAnimationEnd', function(event, info){
-            if (info.direction == 'in')
-            {
-                if(bolLoggedIn)
-                {
-                    loadTicketData();
-                }
-                else
-                {
-                    loginWithCookie();
-                }
+        $('#logoutButton').click(function()
+        {
+            logout();
+        });
+        $.ajaxSetup({
+            error: function(xhr, status, error) {
+                alert("An AJAX error occured: " + status + "\nError: " + error);
             }
+        });
+    
+        $('#ticket').bind('pageAnimationEnd', function(event, info) {
+                if (info.direction == 'in')
+                {
+                    if(bolLoggedIn)
+                    {
+                        loadTicketData();
+                    }
+                    else
+                    {
+                        loginWithCookie();
+                    }
+                }
         });
 
         var selectedPage = $('.current').attr('id');
@@ -207,8 +200,5 @@ $(function()
                 loadTicketData();
             }
         }
-});
-
-     
-});
-
+    });
+})();
