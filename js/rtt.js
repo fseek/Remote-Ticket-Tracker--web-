@@ -9,7 +9,9 @@
     var bolLoggedIn = false;
     var ticketsLoaded = false;
     var selectedTicketEntry;
-
+    var accountUsername;
+    var charId;
+    
     function startsWith(needle, haystack)
     {
         if(haystack.substr(0, needle.length) == needle)
@@ -27,6 +29,7 @@
             if(startsWith('true', data))
             {
                 bolLoggedIn = true;
+                accountUsername = usn;
                 func('true');
             }
             else
@@ -71,10 +74,21 @@
         return data;
     }
     
+    function refreshTickets()
+    {
+        $('#ticketList').append(
+            '<img id="ticketLoader" style="margin:0px auto;display:block" src="img/ajax-loader.gif" />'
+        );
+        ticketsLoaded = false;
+        loadTicketData();
+    }
+    
     function loadTicketData()
     {
+        if(ticketsLoaded == true)return;
         $.post('includes/ticketTracker.php', { c: '1' }, function(data) 
         {
+            if(ticketsLoaded == true)return;
             ticketsLoaded = true;
             data = removeLayerAd(data);
             var html;
@@ -90,27 +104,31 @@
                 );
                 return;
             }
+            //its possible that the first ajax request takes longer than the last
+            var finishedCount = 0;
             for(var i = 0; i<jsIdArray.length; i++)
             {
                 loadTicketDataForId(jsIdArray[i], function(accObj, charObj, index)
                 {
-                    var charStateClass = 'offline';
+                    var charStateClass = 'OFFLINE';
                     if(charObj.online == 1)
                     {
-                        charStateClass = 'online';
+                        charStateClass = 'ONLINE';
                     }
                     html = '<div class="ticketEntry">'
                     html +=     '<div class="ticketId">' + accObj.ticket_id + '</div>'
                     html +=     '<div class="ticketCharacterName">' + charObj.name + '</div>'
                     html +=     '<div class="ticketCharacterState">' + charStateClass + '</div>'
                     html +=     '<div class="ticketText">' + accObj.ticket_text + '</div>'
-                    html +=     '<div class="ticketDelete"><img style="margin:0px auto;display:block" src="./img/delete.png" /></div>'
+                    html +=     '<div class="ticketDelete"><img src="./img/delete.png" /></div>'
+                    html +=     '<input type="hidden" name="charid" value="' + charObj.guid + '">'
                     html += '</div>'
                     ticketLoader.remove();
                     $('#ticketList').append(
                         html,ticketLoader
                     );
-                    if(index == jsIdArray.length-1)
+                    finishedCount++;
+                    if(finishedCount >= jsIdArray.length-1)
                     {
                         ticketLoader.remove();
                     }
@@ -192,8 +210,13 @@
         {
             var subject = $('#subject').val();
             var body = $('#body').val();
-            $.post('includes/ticketTracker.php', { c: '1' }, function(data) 
+            var ticketID = selectedTicketEntry.find('.ticketId').text();
+            var gmname = accountUsername;
+            var charId = selectedTicketEntry.find('input[name=charid]').val();
+            //"charid" "gmname" "subject" "ticketid" "body"
+            $.post('includes/ticketTracker.php', { c: '5', charid: charId, gmname: gmname, ticketid: ticketID, subject: subject, body: body }, function(data) 
             {
+                jQT.goTo('#ticket', 'slidedown');
             });
         });
     
@@ -202,6 +225,12 @@
         {
             logout();
         });
+        
+        $('#refreshButton').click(function()
+        {
+            refreshTickets();
+        });
+        
         
         $(document).on('click', '.ticketEntry', function(event)
         {
@@ -253,6 +282,13 @@
             if(ticketsLoaded == false)
             {
                 loadTicketData();
+            }
+        }
+        if(selectedPage == 'mail')
+        {
+            if(selectedTicketEntry == undefined)
+            {
+                jQT.goTo('#ticket', 'slidedown');
             }
         }
     });

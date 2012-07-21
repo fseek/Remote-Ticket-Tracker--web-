@@ -65,6 +65,7 @@
                 <div class="toolbar">
                     <h1>Ticket</h1>
                     <a href='#' id="logoutButton" class="button">Logout</a>
+                    <a href='#' id="refreshButton" class="leftButton button">Refresh</a>
                 </div>
                 <div id="ticketList">
                     <img id="ticketLoader" style="margin:0px auto;display:block" src="img/ajax-loader.gif" />
@@ -80,6 +81,12 @@
                     <a href='#ticket' id="backButton" class="back">Back</a>
                 </div>
                 <div id="mailContent">
+                    <div id="ticketInfo">
+                        <div id="infoId"></div>
+                        <div id="infoIssue"></div>
+                        <div id="infoDate"></div>
+                        <div id="infoCharname"></div>
+                    </div>
                     <form id="sendMailForm">
                         <ul class="rounded">
                             <li>Subject: <input type="text" name="subject" placeholder="Subject" id="subject" /></li>
