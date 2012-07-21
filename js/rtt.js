@@ -8,6 +8,7 @@
 
     var bolLoggedIn = false;
     var ticketsLoaded = false;
+    var selectedTicketEntry;
 
     function startsWith(needle, haystack)
     {
@@ -81,16 +82,29 @@
             var jsIdArray = jsId.ids;
             $('#ticketList').html($('#ticketLoader'));
             var ticketLoader = $('#ticketLoader');
+            if(jsIdArray.length == 0)
+            {
+                ticketLoader.remove();
+                $('#ticketList').append(
+                    '<div class="info">No tickets found !</div>'
+                );
+                return;
+            }
             for(var i = 0; i<jsIdArray.length; i++)
             {
-                loadTicketDataForId(jsIdArray[i], function(jsObj, index)
+                loadTicketDataForId(jsIdArray[i], function(accObj, charObj, index)
                 {
+                    var charStateClass = 'offline';
+                    if(charObj.online == 1)
+                    {
+                        charStateClass = 'online';
+                    }
                     html = '<div class="ticketEntry">'
-                    html +=     '<div class="ticketId">' + jsObj.ticket_id + '</div>'
-                    html +=     '<div class="ticketCharacterName"></div>'
-                    html +=     '<div class="ticketCharacterState"></div>'
-                    html +=     '<div class="ticketText">' + jsObj.ticket_text + '</div>'
-                    html +=     '<div class="ticketDelete">' + jsObj.ticket_lastchange + '</div>'
+                    html +=     '<div class="ticketId">' + accObj.ticket_id + '</div>'
+                    html +=     '<div class="ticketCharacterName">' + charObj.name + '</div>'
+                    html +=     '<div class="ticketCharacterState">' + charStateClass + '</div>'
+                    html +=     '<div class="ticketText">' + accObj.ticket_text + '</div>'
+                    html +=     '<div class="ticketDelete"><img style="margin:0px auto;display:block" src="./img/delete.png" /></div>'
                     html += '</div>'
                     ticketLoader.remove();
                     $('#ticketList').append(
@@ -109,8 +123,13 @@
     {
         $.post('includes/ticketTracker.php', { c: '2', ticket: ID}, function(data) {
             data = removeLayerAd(data);
-            var jsObj = eval('(' + data + ')');
-            func(jsObj, index);
+            var ticketJsObj = eval('(' + data + ')');
+            $.post('includes/ticketTracker.php', { c: '3', charid: ticketJsObj.guid }, function(charData) 
+            {
+                charData = removeLayerAd(charData);
+                var charJsObj = eval('(' + charData + ')');
+                func(ticketJsObj, charJsObj, index);
+            });
         });
     }
     
@@ -141,11 +160,13 @@
             if(username == '')
             {
                 $('#msg').html('Username field is empty !');
+                $('#msg').addClass('info');
                 return;
             }
             if(password == '')
             {
                 $('#msg').html('Password field is empty !');
+                $('#msg').addClass('info');
                 return;
             }
             var encrPw = SHA1(username.toUpperCase() + ":" + password.toUpperCase());
@@ -155,19 +176,53 @@
                 if(answer != 'true')
                 {
                     $('#msg').html(answer);
+                    $('#msg').addClass('info');
                 }
                 else if(answer == 'true')
                 {
+                    $('#msg').html('');
+                    $('#msg').removeClass('info');
                     jQT.goTo('#ticket', 'slideleft');
                 }
                 $.unblockUI();
             });
         });
     
+        $('#sendMailForm').submit(function()
+        {
+            var subject = $('#subject').val();
+            var body = $('#body').val();
+            $.post('includes/ticketTracker.php', { c: '1' }, function(data) 
+            {
+            });
+        });
+    
+    
         $('#logoutButton').click(function()
         {
             logout();
         });
+        
+        $(document).on('click', '.ticketEntry', function(event)
+        {
+            selectedTicketEntry = $(this);
+            jQT.goTo('#mail', 'slideup');
+        });
+        
+        $(document).on('click', '.ticketDelete', function(event)
+        {
+            var confirm_result = confirm('Are you sure you want to remove this ticket ?');
+            if(confirm_result != true){
+                return false;
+            }
+            var tickEntry = $(this).parent();
+            var ticketID = tickEntry.find('.ticketId').text();
+            $.post('includes/ticketTracker.php', { c: '4', ticketid: ticketID}, function(data) {
+                tickEntry.remove();
+            });
+            event.stopImmediatePropagation();
+        });
+        
         $.ajaxSetup({
             error: function(xhr, status, error) {
                 alert("An AJAX error occured: " + status + "\nError: " + error);

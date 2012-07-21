@@ -35,6 +35,10 @@ div#jqt #about a
 
 }
 
+.ticketEntry{
+    cursor: pointer;
+}
+
 .ticketId{
     float:left;
     width: 100px;
