@@ -74,6 +74,13 @@ div#jqt #about a
     margin: 0px auto;
 }*/
 
+.ticketEntry > a > em {
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}
+
 .ticketDelete {
     margin-left: 15px;
 }
