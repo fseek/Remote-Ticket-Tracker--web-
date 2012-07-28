@@ -35,7 +35,8 @@
             {
                 func(data);
             }
-        });
+        })
+        .error(function() { func("AJAX error"); });
     }
     
     function loginWithCookie()
@@ -162,7 +163,10 @@
         $.post('includes/ticketTracker.php', { c: '6' });
         $.cookie("username", null);
         $.cookie("password", null);
+        $('#username').val('');
+        $('#password').val('');
         jQT.goTo('#home', 'slideright');
+        
     }
 
     function showLoadingDialog()
@@ -179,6 +183,7 @@
     {   
         $('#loginForm').submit(function()
         {
+            showLoadingDialog();
             var username = $('#username').val();
             var password = $('#password').val();
             if(username == '')
@@ -214,6 +219,7 @@
     
         $('#sendMailForm').submit(function()
         {
+            showLoadingDialog();
             var subject = $('#subject').val();
             var body = $('#body').val();
             var ticketID = selectedTicketEntry.find('.ticketId').text();
@@ -223,11 +229,13 @@
             $.post('includes/ticketTracker.php', { c: '5', charid: charId, gmname: gmname, ticketid: ticketID, subject: subject, body: body }, function(data) 
             {
                 jQT.goTo('#ticket', 'slidedown');
-            });
+                $.unblockUI();
+            })
+            .error(function() { $.unblockUI();alert("AJAX error"); });
         });
     
     
-        $('#logoutButton').click(function()
+        $('.logoutButton').click(function()
         {
             logout();
         });
@@ -255,7 +263,8 @@
         
         $(document).on('click', '.ticketDelete', function(event)
         {
-            var confirm_result = confirm('Are you sure you want to remove this ticket ?');
+            showLoadingDialog();
+            var confirm_result = confirm('Are you sure that you want to remove this ticket ?');
             if(confirm_result != true){
                 return false;
             }
@@ -263,8 +272,11 @@
             var ticketEntry = ticketEntryData.parent();
             var ticketID = ticketEntryData.find('.ticketId').text();
             $.post('includes/ticketTracker.php', { c: '4', ticketid: ticketID}, function(data) {
+                ticketEntry.fadeOut();
                 ticketEntry.remove();
-            });
+                $.unblockUI();
+            })
+            .error(function() { $.unblockUI();alert("AJAX error"); });
             event.stopImmediatePropagation();
         });
         
