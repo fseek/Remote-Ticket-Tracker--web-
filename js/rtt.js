@@ -1,9 +1,8 @@
 (function() {
     var jQT = new $.jQTouch(
     {
-        icon: '../img/jqtouch.png',
-        icon4: '../img/jqtouch4.png',
-        startupScreen: '../img/jqt_startup.png',
+        icon: '../img/icon.png',
+        icon4: '../img/icon4.png',
     });
 
     var bolLoggedIn = false;
@@ -242,6 +241,12 @@
         $(document).on('click', '.ticketEntry', function(event)
         {
             selectedTicketEntry = $(this);
+            var ticketID = selectedTicketEntry.find('.ticketId').text();
+            var charname = selectedTicketEntry.find('.ticketCharacterName').text(); 
+            var ticketText = selectedTicketEntry.find('.ticketText').text();
+            $('#mailTicketID').html(ticketID);
+            $('#mailTicketText').html(ticketText);
+            $('#mailCharname').html(charname);
             jQT.goTo('#mail', 'slideup');
         });
         
@@ -259,6 +264,19 @@
             });
             event.stopImmediatePropagation();
         });
+        
+        $('#ticketTextIc').click(function()
+        {
+            if($('#mailTicketText').is(':visible')){
+                $('#ticketTextIc').attr("src", 'img/arrow.png');
+                $('#mailTicketText').fadeOut();
+            }else{
+                $('#ticketTextIc').attr("src", 'img/arrow_down.png');
+                $('#mailTicketText').fadeIn();
+            }
+        });
+        
+        
         
         $.ajaxSetup({
             error: function(xhr, status, error) {

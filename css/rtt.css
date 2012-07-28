@@ -84,3 +84,11 @@ div#jqt #about a
 .ticketDelete {
     margin-left: 15px;
 }
+
+.mailInfo {
+    color: black;
+}
+
+#mailTicketText {
+    font: bold 12px "Helvetica Neue", Helvetica;
+}

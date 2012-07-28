@@ -91,8 +91,13 @@
                     </div>
                     <form id="sendMailForm">
                         <ul class="rounded">
+                            <li>Ticket id: <span class="mailInfo" id="mailTicketID"></span></li>
+                            <li>Ticket text:<img id="ticketTextIc" style="margin-left: 10px;" src="img/arrow_down.png" /><br>
+                                <span class="mailInfo" id="mailTicketText"></span>
+                            </li>
+                            <li>Character name: <span class="mailInfo" id="mailCharname"></span></li>
                             <li>Subject: <input type="text" name="subject" placeholder="Subject" id="subject" /></li>
-                            <li>Body: <input type="text" name="body" placeholder="Body" id="body" /></li>
+                            <li>Body: <textarea placeholder="Body" id="body" ></textarea></li>
                         </ul>
                         <a style="margin-top: 10px; margin-bottom: 10px; color:rgba(0,0,0,.9)" href="#" class="submit whiteButton">Send mail</a>
                     </form>
