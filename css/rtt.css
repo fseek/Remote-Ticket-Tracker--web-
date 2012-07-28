@@ -25,7 +25,7 @@ div#jqt #about a
     text-decoration: none;
 }
 
-#ticketList > div {
+/*#ticketList > div {
     background: -webkit-gradient(linear,0% 0%,0% 100%,from(#dadadc),to(#b4b3b8));
     border-bottom: 1px solid #9a9fa5;
     border-top: 1px solid #dbdbdd;
@@ -72,4 +72,8 @@ div#jqt #about a
     width: 100px;
     background: url(img/delete.png);
     margin: 0px auto;
+}*/
+
+.ticketDelete {
+    margin-left: 15px;
 }

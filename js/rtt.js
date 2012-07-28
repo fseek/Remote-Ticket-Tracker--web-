@@ -85,7 +85,7 @@
     
     function loadTicketData()
     {
-        if(ticketsLoaded == true)return;
+        if (ticketsLoaded == true)return;
         $.post('includes/ticketTracker.php', { c: '1' }, function(data) 
         {
             if(ticketsLoaded == true)return;
@@ -115,17 +115,23 @@
                     {
                         charStateClass = 'ONLINE';
                     }
-                    html = '<div class="ticketEntry">'
-                    html +=     '<div class="ticketId">' + accObj.ticket_id + '</div>'
-                    html +=     '<div class="ticketCharacterName">' + charObj.name + '</div>'
-                    html +=     '<div class="ticketCharacterState">' + charStateClass + '</div>'
-                    html +=     '<div class="ticketText">' + accObj.ticket_text + '</div>'
-                    html +=     '<div class="ticketDelete"><img src="./img/delete.png" /></div>'
-                    html +=     '<input type="hidden" name="charid" value="' + charObj.guid + '">'
-                    html += '</div>'
+                    html =  '<li class="arrow ticketEntry">';
+                    html +=   '<a href="#">';
+                    html +=     '<small>' + charStateClass + '</small>';
+                    html +=     accObj.ticket_id + '. ' + charObj.name;
+                    html +=     '<img class="ticketDelete" src="./img/delete.png" />';
+                    html +=     '<em>' + accObj.ticket_text + '</em>';
+                    /*html +=     '<div class="ticketId">' + accObj.ticket_id + '</div>';
+                    html +=     '<div class="ticketCharacterName">' + charObj.name + '</div>';
+                    html +=     '<div class="ticketCharacterState">' + charStateClass + '</div>';
+                    html +=     '<div class="ticketText">' + accObj.ticket_text + '</div>';
+                    html +=     '<div class="ticketDelete"><img src="./img/delete.png" /></div>';*/
+                    html +=     '<input type="hidden" name="charid" value="' + charObj.guid + '">';
+                    html +=   '</a>';
+                    html += '</li>';
                     ticketLoader.remove();
                     $('#ticketList').append(
-                        html,ticketLoader
+                        html, ticketLoader
                     );
                     finishedCount++;
                     if(finishedCount >= jsIdArray.length-1)
