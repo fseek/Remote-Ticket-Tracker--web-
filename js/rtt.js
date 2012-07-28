@@ -279,7 +279,7 @@
         });
 
         var selectedPage = $('.current').attr('id');
-        if(bolLoggedIn == false && selectedPage != 'home')
+        if(bolLoggedIn == false && selectedPage != 'home' && selectedPage != 'info')
         {
             loginWithCookie();
         }
