@@ -247,6 +247,9 @@
             $('#mailTicketID').html(ticketID);
             $('#mailTicketText').html(ticketText);
             $('#mailCharname').html(charname);
+            //clean last input
+            $('#subject').val('');
+            $('#body').val('');
             jQT.goTo('#mail', 'slideup');
         });
         
