@@ -183,7 +183,6 @@
     {   
         $('#loginForm').submit(function()
         {
-            showLoadingDialog();
             var username = $('#username').val();
             var password = $('#password').val();
             if(username == '')
@@ -201,6 +200,7 @@
             var encrPw = SHA1(username.toUpperCase() + ":" + password.toUpperCase());
             $.cookie("username", username);
             $.cookie("password", encrPw);
+            showLoadingDialog();
             login(username, encrPw, function(answer) {
                 if(answer != 'true')
                 {
