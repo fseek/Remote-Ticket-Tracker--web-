@@ -55,7 +55,9 @@
                 </div>
                 <!-- About Screen _content -->
                 <div class="info">
-                    Made by Thedeath
+                    Made by:<br>
+                    Thedeath<br>
+                    Dindresto
                 </div>
             </div>
             <!-- About Screen END -->
@@ -64,7 +66,7 @@
             <div id="ticket">
                 <div class="toolbar">
                     <h1>Ticket</h1>
-                    <a href='#' id="logoutButton" class="button">Logout</a>
+                    <a href='#' class="button logoutButton">Logout</a>
                     <a href='#' id="refreshButton" class="leftButton button">Refresh</a>
                 </div>
                 <ul class="metal scroll" id="ticketList">
@@ -77,7 +79,7 @@
             <div id="mail">
                 <div class="toolbar">
                     <h1>Mail</h1>
-                    <a href='#' id="logoutButton" class="button">Logout</a>
+                    <a href='#' class="button logoutButton">Logout</a>
                     <a href='#ticket' id="backButton" class="back">Back</a>
                 </div>
                 <div id="mailContent">
@@ -89,8 +91,13 @@
                     </div>
                     <form id="sendMailForm">
                         <ul class="rounded">
+                            <li>Ticket id: <span class="mailInfo" id="mailTicketID"></span></li>
+                            <li>Ticket text:<img id="ticketTextIc" style="margin-left: 10px;" src="img/arrow_down.png" /><br>
+                                <span class="mailInfo" id="mailTicketText"></span>
+                            </li>
+                            <li>Character name: <span class="mailInfo" id="mailCharname"></span></li>
                             <li>Subject: <input type="text" name="subject" placeholder="Subject" id="subject" /></li>
-                            <li>Body: <input type="text" name="body" placeholder="Body" id="body" /></li>
+                            <li>Body: <textarea placeholder="Body" id="body" ></textarea></li>
                         </ul>
                         <a style="margin-top: 10px; margin-bottom: 10px; color:rgba(0,0,0,.9)" href="#" class="submit whiteButton">Send mail</a>
                     </form>

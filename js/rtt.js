@@ -1,9 +1,8 @@
 (function() {
     var jQT = new $.jQTouch(
     {
-        icon: '../img/jqtouch.png',
-        icon4: '../img/jqtouch4.png',
-        startupScreen: '../img/jqt_startup.png',
+        icon: '../img/icon.png',
+        icon4: '../img/icon4.png',
     });
 
     var bolLoggedIn = false;
@@ -36,7 +35,8 @@
             {
                 func(data);
             }
-        });
+        })
+        .error(function() { func("AJAX error"); });
     }
     
     function loginWithCookie()
@@ -117,10 +117,11 @@
                     }
                     html =  '<li class="arrow ticketEntry">';
                     html +=   '<a href="#">';
-                    html +=     '<small>' + charStateClass + '</small>';
-                    html +=     accObj.ticket_id + '. ' + charObj.name;
+                    html +=     '<small><span class="ticketCharacterState">' + charStateClass + '</span></small>';
+                    html +=     '<span class="ticketId">' + accObj.ticket_id + '</span>. ' 
+                    html +=     '<span class="ticketCharacterName">' + charObj.name + '</span>';
                     html +=     '<img class="ticketDelete" src="./img/delete.png" />';
-                    html +=     '<em>' + accObj.ticket_text + '</em>';
+                    html +=     '<em><span class="ticketText">' + accObj.ticket_text + '</span></em>';
                     /*html +=     '<div class="ticketId">' + accObj.ticket_id + '</div>';
                     html +=     '<div class="ticketCharacterName">' + charObj.name + '</div>';
                     html +=     '<div class="ticketCharacterState">' + charStateClass + '</div>';
@@ -162,7 +163,10 @@
         $.post('includes/ticketTracker.php', { c: '6' });
         $.cookie("username", null);
         $.cookie("password", null);
+        $('#username').val('');
+        $('#password').val('');
         jQT.goTo('#home', 'slideright');
+        
     }
 
     function showLoadingDialog()
@@ -179,6 +183,7 @@
     {   
         $('#loginForm').submit(function()
         {
+            showLoadingDialog();
             var username = $('#username').val();
             var password = $('#password').val();
             if(username == '')
@@ -214,6 +219,7 @@
     
         $('#sendMailForm').submit(function()
         {
+            showLoadingDialog();
             var subject = $('#subject').val();
             var body = $('#body').val();
             var ticketID = selectedTicketEntry.find('.ticketId').text();
@@ -223,11 +229,13 @@
             $.post('includes/ticketTracker.php', { c: '5', charid: charId, gmname: gmname, ticketid: ticketID, subject: subject, body: body }, function(data) 
             {
                 jQT.goTo('#ticket', 'slidedown');
-            });
+                $.unblockUI();
+            })
+            .error(function() { $.unblockUI();alert("AJAX error"); });
         });
     
     
-        $('#logoutButton').click(function()
+        $('.logoutButton').click(function()
         {
             logout();
         });
@@ -241,22 +249,49 @@
         $(document).on('click', '.ticketEntry', function(event)
         {
             selectedTicketEntry = $(this);
+            var ticketID = selectedTicketEntry.find('.ticketId').text();
+            var charname = selectedTicketEntry.find('.ticketCharacterName').text(); 
+            var ticketText = selectedTicketEntry.find('.ticketText').text();
+            $('#mailTicketID').html(ticketID);
+            $('#mailTicketText').html(ticketText);
+            $('#mailCharname').html(charname);
+            //clean last input
+            $('#subject').val('');
+            $('#body').val('');
             jQT.goTo('#mail', 'slideup');
         });
         
         $(document).on('click', '.ticketDelete', function(event)
         {
-            var confirm_result = confirm('Are you sure you want to remove this ticket ?');
+            showLoadingDialog();
+            var confirm_result = confirm('Are you sure that you want to remove this ticket ?');
             if(confirm_result != true){
                 return false;
             }
-            var tickEntry = $(this).parent();
-            var ticketID = tickEntry.find('.ticketId').text();
+            var ticketEntryData = $(this).parent();
+            var ticketEntry = ticketEntryData.parent();
+            var ticketID = ticketEntryData.find('.ticketId').text();
             $.post('includes/ticketTracker.php', { c: '4', ticketid: ticketID}, function(data) {
-                tickEntry.remove();
-            });
+                ticketEntry.fadeOut();
+                ticketEntry.remove();
+                $.unblockUI();
+            })
+            .error(function() { $.unblockUI();alert("AJAX error"); });
             event.stopImmediatePropagation();
         });
+        
+        $('#ticketTextIc').click(function()
+        {
+            if($('#mailTicketText').is(':visible')){
+                $('#ticketTextIc').attr("src", 'img/arrow.png');
+                $('#mailTicketText').fadeOut();
+            }else{
+                $('#ticketTextIc').attr("src", 'img/arrow_down.png');
+                $('#mailTicketText').fadeIn();
+            }
+        });
+        
+        
         
         $.ajaxSetup({
             error: function(xhr, status, error) {
@@ -279,7 +314,7 @@
         });
 
         var selectedPage = $('.current').attr('id');
-        if(bolLoggedIn == false && selectedPage != 'home')
+        if(bolLoggedIn == false && selectedPage != 'home' && selectedPage != 'info')
         {
             loginWithCookie();
         }
