@@ -117,10 +117,11 @@
                     }
                     html =  '<li class="arrow ticketEntry">';
                     html +=   '<a href="#">';
-                    html +=     '<small>' + charStateClass + '</small>';
-                    html +=     accObj.ticket_id + '. ' + charObj.name;
+                    html +=     '<small><span class="ticketCharacterState">' + charStateClass + '</span></small>';
+                    html +=     '<span class="ticketId">' + accObj.ticket_id + '</span>. ' 
+                    html +=     '<span class="ticketCharacterName">' + charObj.name + '</span>';
                     html +=     '<img class="ticketDelete" src="./img/delete.png" />';
-                    html +=     '<em>' + accObj.ticket_text + '</em>';
+                    html +=     '<em><span class="ticketText">' + accObj.ticket_text + '</span></em>';
                     /*html +=     '<div class="ticketId">' + accObj.ticket_id + '</div>';
                     html +=     '<div class="ticketCharacterName">' + charObj.name + '</div>';
                     html +=     '<div class="ticketCharacterState">' + charStateClass + '</div>';
@@ -250,10 +251,11 @@
             if(confirm_result != true){
                 return false;
             }
-            var tickEntry = $(this).parent();
-            var ticketID = tickEntry.find('.ticketId').text();
+            var ticketEntryData = $(this).parent();
+            var ticketEntry = ticketEntryData.parent();
+            var ticketID = ticketEntryData.find('.ticketId').text();
             $.post('includes/ticketTracker.php', { c: '4', ticketid: ticketID}, function(data) {
-                tickEntry.remove();
+                ticketEntry.remove();
             });
             event.stopImmediatePropagation();
         });
