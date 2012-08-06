@@ -10,7 +10,7 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
     function showTicketData($id)
     {
         global $dbsettings;
-        $values = $this->doQuery("SELECT ticket_id,guid,ticket_text,ticket_lastchange FROM `character_ticket` WHERE `ticket_id` = '".$id."';", $dbsettings["world_db"]);
+        $values = $this->doQuery("SELECT ticket_id,guid,ticket_text,ticket_lastchange FROM `character_ticket` WHERE `ticket_id` = '".$id."';", $dbsettings["char_db"]);
         $id = mysql_fetch_array($values);
         $dataArr = $id;
         echo json_encode($dataArr);
@@ -19,7 +19,7 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
     function getCharInfo($id)
     {
         global $dbsettings;
-        $sel_char_name = $this->doQuery("SELECT guid,name,online FROM characters WHERE guid = '" . $id . "' ORDER BY online DESC", $dbsettings["world_db"]);
+        $sel_char_name = $this->doQuery("SELECT guid,name,online FROM characters WHERE guid = '" . $id . "' ORDER BY online DESC", $dbsettings["char_db"]);
         $id = mysql_fetch_array($sel_char_name);
         $dataArr = $id;
         echo json_encode($dataArr);
@@ -28,7 +28,7 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
     function showIds()
     {
         global $dbsettings;
-        $ids = $this->doQuery("SELECT `ticket_id` FROM `character_ticket`;", $dbsettings["world_db"]);
+        $ids = $this->doQuery("SELECT `ticket_id` FROM `character_ticket`;", $dbsettings["char_db"]);
         $idsImpl = array();
         $count = 0;
         while($id = mysql_fetch_array($ids))
@@ -62,7 +62,7 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
     {
         global $dbsettings;
         $gmId = 1;
-        $sel_mail_info = $this->doQuery("SELECT id FROM mail ORDER BY id DESC LIMIT 1", $dbsettings["world_db"]);
+        $sel_mail_info = $this->doQuery("SELECT id FROM mail ORDER BY id DESC LIMIT 1", $dbsettings["char_db"]);
         $fetch_mail_info = mysql_fetch_array($sel_mail_info);
         $mail_id = $fetch_mail_info['id'];
         $mail_id2 = $mail_id + 1;
@@ -74,7 +74,7 @@ class MangosRemoteTicketTracker extends RemoteTicketTracker
     function deleteTicket($ticket_id)
     {
         global $dbsettings;
-        $delete_ticket = $this->doQuery("DELETE FROM `character_ticket` WHERE `ticket_id` = '" . $ticket_id . "'", $dbsettings["world_db"]);
+        $delete_ticket = $this->doQuery("DELETE FROM `character_ticket` WHERE `ticket_id` = '" . $ticket_id . "'", $dbsettings["char_db"]);
         echo $delete_ticket;
     }
 
