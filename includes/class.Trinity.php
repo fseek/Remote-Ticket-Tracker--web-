@@ -32,25 +32,30 @@ class TrinityRemoteTicketTracker extends RemoteTicketTracker
     function showIds()
     {
         global $dbsettings;
-        $ids = $this->doQuery("SELECT `ticket_id` FROM `character_ticket`;", $dbsettings["world_db"]);
+        $ids = $this->doQuery("SELECT `ticketId` FROM `gm_tickets`;", $dbsettings["world_db"]);
+		$idsImpl = array();
+        $count = 0;
         while($id = mysql_fetch_array($ids))
         {
-            echo $id[0]."<br>";
+            $idsImpl[$count] = $id[0];
+            $count = $count+1;
         }
+        $jsonObj = array('ids' => $idsImpl);
+        echo json_encode($jsonObj);
     }
 
     function checkLogin($username, $password) //$password = SHA1(CONCAT(UPPER(`username`), ':', UPPER(<pass>)));
     {
         global $dbsettings;
-        $data = $this->doQuery("SELECT `gmlevel` FROM `account` WHERE `username` = '" . $username . "' AND sha_pass_hash = '" . $password . "'", $dbsettings["acc_db"]);
-        if(!$data)
+        $data = $this->doQuery("SELECT account_access.gmlevel AS `gmlevel` FROM `account_access`,`account` WHERE account.id=account_access.id AND `username` = '" . $username . "' AND sha_pass_hash = '" . $password . "'", $dbsettings["acc_db"]);
+        if(!$data || mysql_num_rows($data) == 0)
         {
             echo "false<br>Data wrong!";
             die;
         }
         $fetch_gm_info = mysql_fetch_array($data);
         $gm_level = $fetch_gm_info['gmlevel'];
-        if($gm_level == 0 || $gm_level == 1)
+        if($gm_level < 2)
         {
             echo "false<br>Premission denied !";
             die;

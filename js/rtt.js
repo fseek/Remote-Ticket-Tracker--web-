@@ -74,16 +74,22 @@
         return data;
     }
     
+	var refreshing = false;
     function refreshTickets()
     {
+		if(refreshing)return;
+		refreshing = true;
+		$('#ticketList').html('');
         $('#ticketList').append(
             '<img id="ticketLoader" style="margin:0px auto;display:block" src="img/ajax-loader.gif" />'
         );
         ticketsLoaded = false;
-        loadTicketData();
+        loadTicketData(function(){
+			refreshing = false;
+		});
     }
     
-    function loadTicketData()
+    function loadTicketData(callback)
     {
         if (ticketsLoaded == true)return;
         $.post('includes/ticketTracker.php', { c: '1' }, function(data) 
@@ -92,11 +98,20 @@
             ticketsLoaded = true;
             data = removeLayerAd(data);
             var html;
+			var ticketLoader = $('#ticketLoader');
+            if(data.length <= 0)
+            {
+                ticketLoader.remove();
+                $('#ticketList').append(
+                    '<div class="info">No tickets found !</div>'
+                );
+                return;
+            }
             var jsId = eval('(' + data + ')');
             var jsIdArray = jsId.ids;
             $('#ticketList').html($('#ticketLoader'));
-            var ticketLoader = $('#ticketLoader');
-            if(jsIdArray.length == 0)
+            
+            if(jsIdArray.length <= 0)
             {
                 ticketLoader.remove();
                 $('#ticketList').append(
@@ -138,6 +153,7 @@
                     if(finishedCount >= jsIdArray.length-1)
                     {
                         ticketLoader.remove();
+						callback();
                     }
                 }, i);
             }
