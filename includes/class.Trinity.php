@@ -70,7 +70,7 @@ class TrinityRemoteTicketTracker extends RemoteTicketTracker
         $fetch_mail_info = mysql_fetch_array($sel_mail_info);
         $mail_id = $fetch_mail_info['id'];
         $mail_id2 = $mail_id + 1;
-        $send_mail = $this->doQuery("INSERT INTO mail VALUES ('" . $mail_id2 . "', '0', '61', '0', '".$gmId."', '" . $char_id . "', '".$subject. "', '" . $mail_body . " \n \n This mail was send by the Ticket Support System. If you want to answer this mail write a new ticket.', '0', '0', '0', '0', '0', '0');", $dbsettings["world_db"]);
+        $send_mail = $this->doQuery("INSERT INTO mail VALUES ('" . $mail_id2 . "', '0', '61', '0', '".$gmId."', '" . $char_id . "', '".$subject. "', '" . $mail_body . " \n \n This mail was send by the Ticket Support System. If you want to answer this mail write a new ticket.', '0', '0', '0', '0', '0', '0');", $dbsettings["char_db"]);
         //deleteTicket($ticket_id);
         echo "<br>".$send_mail;
     }
